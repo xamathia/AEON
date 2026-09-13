@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f6fb">
+  <title>ÆON — Your day, a little further ahead</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to calendar</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ÆON, home"><span class="brand-orbit" aria-hidden="true"></span>ÆON</a>
+    <nav aria-label="Main navigation"><a class="nav-current" href="#workspace">My day</a><a href="#live-connections">My connections</a><button id="show-sources" class="nav-button">Sources & assumptions</button></nav>
+    <span class="demo-badge"><span></span>Synthetic demo</span>
+  </header>
+  <main id="workspace">
+    <section class="intro" aria-labelledby="title">
+      <div><p class="intro-date" id="day-label">Monday 14 September 2026</p><h1 id="title">Your day,<br>a little further ahead.</h1><p class="intro-copy">Your calendar holds your appointments.<br>ÆON reveals what could happen in between.</p></div>
+      <div class="actions"><button id="analyze" class="primary"><span class="button-orbit" aria-hidden="true">◌</span>Analyse my day</button><button id="incident" class="secondary" disabled><span aria-hidden="true">↗</span>Simulate a traffic incident</button><button id="reset" class="text-button" hidden>Restore normal traffic</button></div>
+    </section>
+    <div id="notice" class="notice" role="status" aria-live="polite"><span class="notice-dot"></span><span id="notice-text">Loading your reference day…</span></div>
+    <section class="plans-panel" id="plans-panel" aria-labelledby="plans-title" aria-busy="false">
+      <div class="plans-heading"><div><h2 id="plans-title">What if your day took another path?</h2><p>Move your flexible personal block. Measure the difference it makes for dinner.</p></div><button id="find-plans" class="secondary" disabled>Find alternatives</button></div>
+      <p id="plans-status" class="plans-status" role="status" aria-live="polite">Analyse your day first to compare up to three proposals.</p>
+      <div id="plan-list" class="plan-list"></div>
+      <p id="search-summary" class="search-summary" hidden></p>
+      <p class="search-bounds">Demo search from 14:00 to 21:00 in 15-minute steps, with a budget of 100 candidates. This synthetic scope does not guarantee the best possible plan. Previewing does not change any calendar.</p>
+    </section>
+    <section id="preview-banner" class="preview-banner" aria-labelledby="preview-title" hidden tabindex="-1"><div><h2 id="preview-title">Alternative preview</h2><p id="preview-description"></p></div><button id="close-preview" class="secondary">Close preview</button></section>
+    <div class="workspace-grid">
+      <section class="calendar-panel" aria-labelledby="calendar-title">
+        <div class="panel-heading"><div><h2 id="calendar-title">One day. Two perspectives.</h2><p id="calendar-description">Planned and probable, on the same scale.</p></div><span class="timezone">Europe/Paris</span></div>
+        <div class="lane-labels"><span></span><div><span class="legend-dot planned-dot"></span><span id="planned-label">Your calendar</span></div><div><span class="legend-dot shadow-dot"></span>Shadow Calendar <span class="live-label" id="projection-state">Pending</span></div></div>
+        <div class="timeline" id="timeline"><div class="timeline-loading">Loading calendar…</div></div>
+        <div class="calendar-footer"><span class="uncertainty-key"></span><p>The band shows end times between the model’s 10th and 90th percentiles. It does not guarantee the actual time.</p></div>
+      </section>
+      <aside class="insight-panel" aria-label="Forecast and context">
+        <section class="risk-panel" aria-labelledby="risk-title">
+          <div class="risk-heading"><span class="small-orbit" aria-hidden="true">◉</span><h2 id="risk-title">Your next pressure point</h2></div>
+          <p class="target-name" id="target-name">Protected dinner</p><p class="target-time" id="target-time">Expected arrival before 17:55</p>
+          <div class="risk-display"><svg class="risk-ring" viewBox="0 0 180 180" aria-hidden="true"><circle class="ring-track" cx="90" cy="90" r="76"/><circle id="ring-value" class="ring-value" cx="90" cy="90" r="76"/></svg><div class="risk-value"><strong id="risk-number">—</strong><span>risk of arriving late</span></div></div>
+          <p class="risk-description" id="risk-description">Run the analysis to measure how vulnerable this sequence is to delays.</p>
+          <div class="arrival-summary"><span>Median arrival</span><strong id="arrival-median">—</strong></div>
+          <div class="arrival-summary"><span>Arrival range p10–p90</span><strong id="arrival-range">—</strong></div>
+          <p class="comparison" id="comparison" hidden></p>
+        </section>
+        <section class="signals" aria-labelledby="signals-title"><h2 id="signals-title">What your calendar leaves out</h2><div id="signal-list"></div></section>
+      </aside>
+    </div>
+    <section id="event-details" class="event-details" hidden aria-live="polite"></section>
+    <section class="method-strip" aria-label="Simulation metrics"><div><span>Simulated futures</span><strong id="sample-count">—</strong></div><div><span id="elapsed-label">Measured compute time</span><strong id="elapsed">—</strong></div><div><span>AI calls for simulation</span><strong id="llm-count">—</strong></div><p>No calendar changes.<br>You are exploring a synthetic day.</p></section>
+    <section id="live-connections" class="live-connections" aria-labelledby="connections-title">
+      <div class="connections-heading"><div><h2 id="connections-title">My Google connections</h2><p>Choose a source, then the data to read.<br>Every read starts only at your request.</p></div><button id="refresh-connections" class="secondary" disabled>Refresh connections</button></div>
+      <p class="canonical-instruction">To connect, open <a id="canonical-address" href="/">the local ÆON address</a> in your regular browser, then choose “Connect”. Google consent must open in that same browser, outside the embedded Codex browser.</p>
+      <div class="connection-notice" id="connections-notice" role="status" aria-live="polite">Opening your local session…</div>
+      <div class="live-provider-grid">
+        <article class="live-provider" id="google_calendar-panel" aria-labelledby="google_calendar-title" aria-busy="false">
+          <div class="provider-heading"><h3 id="google_calendar-title">Google Calendar</h3><span class="provider-badge" id="google_calendar-badge">Pending</span></div>
+          <p class="provider-status" id="google_calendar-status">Checking configuration…</p>
+          <div class="provider-actions"><button id="google_calendar-connect" class="secondary" disabled>Connect Calendar</button><button id="google_calendar-forget" class="text-button" disabled>Forget Calendar</button></div>
+          <form id="calendar-read-form" class="read-form">
+            <fieldset id="calendar-read-fields" disabled><legend>Read my primary calendar</legend>
+              <div class="date-fields"><label for="calendar-start">From<input id="calendar-start" type="datetime-local" required></label><label for="calendar-end">Until, exclusive<input id="calendar-end" type="datetime-local" required></label></div>
+              <label for="calendar-timezone">Time zone<input id="calendar-timezone" type="text" value="Europe/Paris" maxlength="80" required spellcheck="false" autocomplete="off" aria-describedby="calendar-read-help"></label>
+              <p class="read-help" id="calendar-read-help">Enter the start and end in this time zone. The period must be no longer than 7 days (168 hours).</p>
+              <button class="primary" type="submit" id="calendar-read">Read this period</button>
+            </fieldset>
+          </form>
+          <p id="google_calendar-feedback" class="provider-feedback" role="status" aria-live="polite"></p>
+          <div id="google_calendar-data" class="read-data"></div>
+        </article>
+        <article class="live-provider" id="gmail-panel" aria-labelledby="gmail-title" aria-busy="false">
+          <div class="provider-heading"><h3 id="gmail-title">Gmail</h3><span class="provider-badge" id="gmail-badge">Pending</span></div>
+          <p class="provider-status" id="gmail-status">Checking configuration…</p>
+          <div class="provider-actions"><button id="gmail-connect" class="secondary" disabled>Connect Gmail</button><button id="gmail-forget" class="text-button" disabled>Forget Gmail</button></div>
+          <form id="gmail-read-form" class="read-form">
+            <fieldset id="gmail-read-fields" disabled><legend>Search message excerpts</legend>
+              <label for="gmail-query">Your Gmail search<textarea id="gmail-query" rows="3" maxlength="500" required spellcheck="false" autocomplete="off" placeholder="e.g. subject:reservation newer_than:7d" aria-describedby="gmail-read-help"></textarea></label>
+              <p class="read-help" id="gmail-read-help">Up to 500 characters. Each read returns at most 10 excerpts. Claude analysis starts separately, after your selection and consent.</p>
+              <button class="primary" type="submit" id="gmail-read">Read up to 10 excerpts</button>
+            </fieldset>
+          </form>
+          <p id="gmail-feedback" class="provider-feedback" role="status" aria-live="polite"></p>
+          <div id="gmail-data" class="read-data"></div>
+        </article>
+      </div>
+      <p class="live-boundary">These reads stay separate from the synthetic day and its simulations. No calendar is changed and no email is sent. Imported events remain fixed; add their locations and travel before running a real-data simulation. “Forget” clears this source’s connection and data from ÆON; your Google data stays intact.</p>
+    </section>
+    <section id="intelligence-panel" class="live-forecast intelligence-panel" aria-labelledby="intelligence-title" aria-busy="false">
+      <div class="plans-heading"><div><h2 id="intelligence-title">What your message asks for</h2><p>A selected excerpt, a proposed arrival time, then your confirmation.</p></div><button id="intelligence-refresh" class="secondary" disabled>Refresh imported excerpts</button></div>
+      <p id="intelligence-notice" class="forecast-notice" role="status" aria-live="polite">Read Calendar and Gmail in “My connections”, then refresh here. This refresh does not read any new messages.</p>
+      <p id="intelligence-metrics" class="read-help"></p>
+      <div class="intelligence-grid">
+        <div><label class="agent-field" for="intelligence-message">Excerpt to analyse<select id="intelligence-message" disabled><option value="">Choose a message</option></select></label><blockquote id="intelligence-excerpt" class="intelligence-excerpt"></blockquote></div>
+        <fieldset id="intelligence-event-fields" class="agent-fieldset" disabled><legend>Relevant appointments</legend><p class="read-help">Choose 1 to 20 events to match with this excerpt.</p><div id="intelligence-events" class="agent-options"></div></fieldset>
+      </div>
+      <p id="intelligence-consent" class="read-help">By clicking “Analyse with Claude”, you authorise sending the displayed excerpt and selected events to Anthropic. No other message is sent. The analysis may use a billable call; it does not change your calendar.</p>
+      <div class="forecast-actions"><button id="intelligence-extract" class="primary" disabled>Analyse with Claude</button></div>
+      <div id="intelligence-result" class="intelligence-result" aria-live="polite"></div>
+      <div class="forecast-actions"><button id="intelligence-confirm" class="secondary" hidden disabled>Confirm this arrival time</button><button id="intelligence-reset" class="text-button" disabled>Clear Gmail constraints</button></div>
+      <ul id="intelligence-constraints" class="forecast-assumptions"></ul>
+    </section>
+    <section id="live-forecast" class="live-forecast" aria-labelledby="forecast-title" aria-busy="false">
+      <div class="plans-heading"><div><h2 id="forecast-title">Forecast my real calendar</h2><p>Your imported Calendar, your travel inputs, and a simulation separate from the demo.</p></div><button id="forecast-refresh" class="secondary" disabled>Refresh imported calendar</button></div>
+      <p id="forecast-notice" class="forecast-notice" role="status" aria-live="polite">Restore your session in “My Google connections”, then refresh this calendar. This refresh does not read Google.</p>
+      <p id="forecast-calendar" class="read-scope"></p>
+      <ul id="forecast-issues" class="forecast-issues"></ul>
+      <p id="forecast-budget" class="forecast-budget"></p>
+      <p class="routing-attribution">Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors · ODbL</a>. Routing by <a href="https://project-osrm.org/" target="_blank" rel="noopener noreferrer">OSRM</a>, service operated by <a href="https://routing.openstreetmap.de/about.html" target="_blank" rel="noopener noreferrer">FOSSGIS</a> · <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener noreferrer">Fix the map</a>.<br>Public services for a light demo: manual requests, no autocomplete or heavy use. <a href="https://operations.osmfoundation.org/policies/nominatim/" target="_blank" rel="noopener noreferrer">Nominatim usage policy</a>.</p>
+      <div id="forecast-pairs" class="forecast-pairs"></div>
+      <div class="forecast-actions"><button id="forecast-simulate" class="primary" disabled>Calculate real-data forecast</button><button id="forecast-reset" class="secondary" disabled>Clear travel and forecast</button></div>
+      <section class="live-plans" aria-labelledby="live-plans-title">
+        <h3 id="live-plans-title">Find another arrangement</h3>
+        <p class="read-help">Preview freely. To apply a real plan, <a href="#calendar-actions">set up separate Calendar write access</a>, then review its exact time changes.</p>
+        <form id="live-plans-form" class="live-plans-form">
+          <label class="agent-field" for="live-plan-target">Appointment to protect<select id="live-plan-target" disabled><option value="">Choose an appointment</option></select></label>
+          <fieldset id="live-movable-fields" class="agent-fieldset" disabled><legend>Blocks you allow to move</legend><p class="read-help">1 to 5 personal blocks with no other attendees. The target stays fixed.</p><div id="live-movable-events" class="agent-options"></div></fieldset>
+          <div class="date-fields"><label class="agent-field" for="live-plan-start">Window start<input type="datetime-local" id="live-plan-start" required disabled></label><label class="agent-field" for="live-plan-end">Window end<input type="datetime-local" id="live-plan-end" required disabled></label></div>
+          <p id="live-plan-window-help" class="read-help">Choose a window within the imported period, no longer than 24 hours.</p>
+          <button id="live-plan-search" class="secondary" disabled>Find real-data alternatives</button>
+        </form>
+        <p id="live-plan-status" class="forecast-notice" role="status" aria-live="polite"></p>
+        <div id="live-plan-list" class="plan-list"></div>
+        <p class="read-help">A bounded search with no guarantee of a global optimum. Observed travel is reused as an assumption; no new traffic is requested. Previewing does not change any calendar.</p>
+      </section>
+      <section id="live-preview-banner" class="preview-banner" hidden tabindex="-1" aria-label="Real-data forecast preview"><div><h3>Local preview</h3><p id="live-preview-description"></p></div><button id="live-preview-close" class="secondary">Return to the reference forecast</button></section>
+      <div id="forecast-result" class="forecast-result"></div>
+      <ul id="forecast-assumptions" class="forecast-assumptions"></ul>
+      <p class="live-boundary">Locations are never inferred from titles. OSRM is the default, with no Google key or bank card required and no live traffic. Google Routes remains optional when configured and is only called if you choose it. Distributions remain uncalibrated assumptions. Only Gmail arrival times you confirm are used. Forecasting and previewing do not change Calendar; applying or undoing a plan requires an explicit action.</p>
+    </section>
+    <section id="calendar-actions" class="live-forecast calendar-actions" aria-labelledby="actions-title" aria-busy="false" tabindex="-1">
+      <div class="plans-heading"><div><h2 id="actions-title">Make the change, on your terms</h2><p>Separate write access. Exact times reviewed. A receipt for each attempt.</p></div><button id="actions-refresh" class="secondary" disabled>Refresh write access and receipts</button></div>
+      <p class="read-help">This Google consent allows Calendar event changes. ÆON only applies the real plan you explicitly choose to personal, standalone blocks in your primary calendar, with no other attendees. Read access does not grant write access.</p>
+      <div class="forecast-actions"><button id="actions-connect" class="secondary" disabled>Connect Calendar write access</button><button id="actions-forget" class="text-button" disabled>Forget write access</button></div>
+      <p id="actions-notice" class="forecast-notice" role="status" aria-live="polite">Restore your local session to check write access. No Calendar change starts automatically.</p>
+      <p id="actions-budget" class="read-help"></p>
+      <div id="actions-receipts" class="action-receipts" aria-live="polite"></div>
+      <p id="actions-empty" class="read-help">No change receipts in this session.</p>
+      <p class="live-boundary">Receipts and undo are stored only in this local session’s memory, until it expires or the server stops. They survive source refreshes and forgetting write access, but are not a durable history. Undo needs write access and an unchanged Calendar version; an uncertain or conflicting outcome must be checked in Google Calendar.</p>
+    </section>
+    <details id="sources-panel" class="sources-panel"><summary>Understand the sources and assumptions<span aria-hidden="true">+</span></summary><div class="sources-content"><p>The three sources below describe only the synthetic demo inputs. They remain synthetic even if you authorise a source in “My Google connections”.</p><div id="connection-list" class="connection-list"></div><h3>Model assumptions</h3><ul id="assumptions"></ul><p class="method-note">1,000 samples explore the stated assumptions. Monte Carlo precision does not prove these assumptions are calibrated to real life. The incident adds 12 minutes to possible travel times without changing an external account.</p></div></details>
+    <footer class="footer"><span>ÆON</span><p>A little less uncertainty. A little more time for you.</p><span>Hackathon prototype</span></footer>
+  </main>
+</body>
+</html>

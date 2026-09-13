@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""CI entry point for the tests present in the application."""
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+root = Path(__file__).resolve().parent.parent
+suites = ['tests/api']
+packages = [
+    ('aeon_engine', 'engine'),
+    ('aeon_planner', 'planner'),
+    ('aeon_connectors', 'connectors'),
+    ('aeon_actions', 'actions'),
+    ('aeon_oauth', 'oauth'),
+    ('aeon_scenario', 'scenario'),
+    ('aeon_intelligence', 'intelligence'),
+]
+for package, suite in packages:
+    if (root / 'packages' / package).exists():
+        if not list((root / 'tests' / suite).glob('test_*.py')):
+            sys.exit(f'{package} exists without tests/{suite}/test_*.py: validation rejected.')
+        suites.append(f'tests/{suite}')
+for suite in suites:
+    result = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', suite, '-v'], cwd=root)
+    if result.returncode:
+        sys.exit(result.returncode)
+node = shutil.which('node')
+if not node:
+    sys.exit('Node.js is required to check JavaScript syntax; no npm packages need to be installed.')
+frontend_tests = sorted(root.glob('apps/web/*.test.js'))
+if frontend_tests:
+    result = subprocess.run(
+        [node, '--test', *(str(path.relative_to(root)) for path in frontend_tests)],
+        cwd=root,
+    )
+    if result.returncode:
+        sys.exit(result.returncode)
+sys.exit(subprocess.run([node, '--check', 'apps/web/app.js'], cwd=root).returncode)

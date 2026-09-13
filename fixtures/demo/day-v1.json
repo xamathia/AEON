@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "scenario_id": "aeon-demo-day-v1",
+  "mode": "synthetic",
+  "timezone": "Europe/Paris",
+  "horizon": {
+    "start": "2026-09-14T00:00:00+02:00",
+    "end": "2026-09-15T00:00:00+02:00"
+  },
+  "seed": 20260914,
+  "samples": 1000,
+  "events": [
+    {
+      "id": "meeting",
+      "title": "Client meeting",
+      "planned_start": "2026-09-14T16:00:00+02:00",
+      "planned_end": "2026-09-14T17:00:00+02:00",
+      "classification": "fixed",
+      "private": false,
+      "overrun_minutes": {
+        "min": 0,
+        "mode": 9,
+        "max": 30
+      },
+      "source": {
+        "provider": "google_calendar",
+        "reference": "synthetic:calendar:meeting",
+        "synthetic": true,
+        "assumption": "Hypothetical overruns, not calibrated to a user."
+      }
+    },
+    {
+      "id": "focus",
+      "title": "Prepare the file",
+      "planned_start": "2026-09-14T17:00:00+02:00",
+      "planned_end": "2026-09-14T17:20:00+02:00",
+      "classification": "flexible",
+      "private": true,
+      "overrun_minutes": {
+        "min": 0,
+        "mode": 0,
+        "max": 0
+      },
+      "source": {
+        "provider": "google_calendar",
+        "reference": "synthetic:calendar:focus",
+        "synthetic": true,
+        "assumption": "Hypothetical overruns, not calibrated to a user."
+      }
+    },
+    {
+      "id": "dinner",
+      "title": "Protected dinner",
+      "planned_start": "2026-09-14T18:00:00+02:00",
+      "planned_end": "2026-09-14T19:00:00+02:00",
+      "classification": "fixed",
+      "private": true,
+      "overrun_minutes": {
+        "min": 0,
+        "mode": 0,
+        "max": 0
+      },
+      "source": {
+        "provider": "google_calendar",
+        "reference": "synthetic:calendar:dinner",
+        "synthetic": true,
+        "assumption": "Hypothetical overruns, not calibrated to a user."
+      }
+    }
+  ],
+  "travel_edges": [
+    {
+      "from_event_id": "meeting",
+      "to_event_id": "focus",
+      "duration_minutes": {
+        "min": 0,
+        "mode": 0,
+        "max": 0
+      },
+      "source": {
+        "provider": "user",
+        "reference": "synthetic:same-location",
+        "synthetic": true,
+        "assumption": ""
+      }
+    },
+    {
+      "from_event_id": "focus",
+      "to_event_id": "dinner",
+      "duration_minutes": {
+        "min": 30,
+        "mode": 38,
+        "max": 55
+      },
+      "source": {
+        "provider": "google_routes",
+        "reference": "synthetic:route:dinner",
+        "synthetic": true,
+        "assumption": "Triangular distribution constructed by ÆON; no Google quantile is guaranteed."
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "dinner-arrival",
+      "type": "arrival_deadline",
+      "event_id": "dinner",
+      "deadline": "2026-09-14T17:55:00+02:00",
+      "source": {
+        "provider": "gmail",
+        "reference": "synthetic:gmail:reservation-update",
+        "synthetic": true,
+        "assumption": "Synthetic email: please arrive five minutes before 18:00."
+      }
+    }
+  ]
+}
